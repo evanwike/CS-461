@@ -8,34 +8,54 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner;
-        ArrayList<Board> boards = new ArrayList<>();
+        PrintWriter writer;
+        ArrayList<Puzzle> puzzles = new ArrayList<>();
 
         try {
-            scanner = new Scanner(new File("data.txt"));
+            scanner = new Scanner(new FileInputStream("data.txt"));
+            writer = new PrintWriter("solutions.txt");
 
             while (scanner.hasNext()) {
-                int[][] board = new int[3][3];
-
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        int n = scanner.nextInt();
-                        board[i][j] = n;
-                    }
-                }
-                boards.add(new Board(board));
+                Puzzle puzzle = new Puzzle(getBoardFromInput(scanner), writer);
+                puzzles.add(puzzle);
             }
 
+            scanner.close();
+            solvePuzzles(puzzles, writer);
         }
         catch (FileNotFoundException fnf) {
-            System.out.println("Could not find file.");
+            System.out.println("An error occurred while attempting to open the input file.");
         }
 
-        printBoards(boards);
     }
 
-    public static void printBoards(ArrayList<Board> boards) {
-        for (Board board : boards) {
-            System.out.println(board.toString());
+    private static void solvePuzzles(ArrayList<Puzzle> puzzles, PrintWriter writer) {
+        for (Puzzle puzzle : puzzles) {
+            if (puzzle.isSolvable()) {
+                puzzle.solve();
+            } else {
+                writer.write("No solution for initial state exists.");
+                writer.flush();
+            }
+        }
+        writer.close();
+    }
+
+    private static int[][] getBoardFromInput(Scanner scanner) {
+        int[][] board = new int[3][3];
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = scanner.nextInt();
+            }
+        }
+        return board;
+    }
+
+    // Used for testing board input
+    private static void printBoards(ArrayList<Puzzle> puzzles) {
+        for (Puzzle puzzle : puzzles) {
+            System.out.println(puzzle);
         }
     }
 }
