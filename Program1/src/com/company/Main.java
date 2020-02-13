@@ -30,13 +30,20 @@ public class Main {
     }
 
     private static void solvePuzzles(ArrayList<Puzzle> puzzles, PrintWriter writer) {
+        int i = 1;
+
         for (Puzzle puzzle : puzzles) {
+            writer.write(String.format("PUZZLE %d\n", i));
+
             if (puzzle.isSolvable()) {
                 puzzle.solve();
             } else {
-                writer.write("No solution for initial state exists.");
+                writer.write(puzzle.getInitial());
+                writer.write("No solution for initial state exists.\n");
                 writer.flush();
             }
+            i++;
+            writer.write('\n');
         }
         writer.close();
     }

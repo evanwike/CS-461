@@ -8,10 +8,9 @@ import static com.company.Utils.*;
 
 public class Puzzle {
     private static final int N = 3;
-    private static final int[][] GOAL = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
     private int[][] initial;
     private PrintWriter pw;
-    private Set<String> visited;
+    private Set<Integer> visited;
 
 
     Puzzle(int[][] initial, PrintWriter pw) {
@@ -20,20 +19,16 @@ public class Puzzle {
         this.visited = new HashSet<>();
     }
 
-    // Total number of tiles out of position
-    public int hamming() {
-        int count = 0;
+    public String getInitial() {
+        StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                int tile = initial[i][j];
-                int goal = GOAL[i][j];
-
-                if (tile != 0 && tile != goal)
-                    count++;
+        for (int row[] : initial) {
+            for (int col : row) {
+                sb.append(String.format("%d ", col));
             }
+            sb.append('\n');
         }
-        return count;
+        return sb.toString();
     }
 
     // Determines if puzzle is solvable by counting the number of inversions
@@ -69,7 +64,7 @@ public class Puzzle {
             Node min = pq.poll();
 
             // Goal state
-            if (min.getMPF() == 0) {
+            if (min.isGoal()) {
                 printPath(min);
                 return;
             }
@@ -179,21 +174,22 @@ public class Puzzle {
 
     // Checks to see if current node has already been visited, marks as visited if not
     private boolean notVisited(Node node) {
-        String nodeStr = node.toString();
+        int hash = node.getHash();
 
-        if (visited.contains(nodeStr))
+        if (visited.contains(hash))
             return false;
         else
-            visited.add(nodeStr);
+            visited.add(hash);
         return true;
     }
 
-    private void printPath(Node root) {
-        if (root == null) return;
+    private void printPath(Node node) {
+        if (node == null) return;
 
-        printPath(root.getParent());
-        pw.write(root.toString());
-        pw.flush();
+        Node parent = node.getParent();
+
+        printPath(parent);
+        pw.write(node.toString() + '\n');
     }
 
     // Used for testing initial state

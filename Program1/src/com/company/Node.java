@@ -1,12 +1,14 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.company.Utils.deepCopy;
 import static com.company.Utils.flatten;
 
 public class Node {
     private static final int N = 3;
+    private static final int[][] GOAL = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
     private Node parent;
     private int[][] state;
     private int level;          // # Moves so far
@@ -19,11 +21,11 @@ public class Node {
         this.level = level;
         this.row = row;
         this.col = col;
-        this.mpf = manhattan() + level;
+        this.mpf = manhattan() + level; // g(n) + h(n)
     }
 
     public Node getParent() { return parent; }
-    public int[][] getState() { return state.clone(); }
+    public int[][] getState() { return deepCopy(state, N); }
     public int getLevel() { return level; }
 
     // Get coordinates of blank space
@@ -31,7 +33,14 @@ public class Node {
     public int getCol() { return col; }
 
     public int getMPF() { return mpf; }
+    public int getHash() {
+        ArrayList<Integer> flat = flatten(getState());
+        Integer[] a = flat.toArray(new Integer[0]);
 
+        return Arrays.hashCode(a);
+    }
+
+    // Sum of Manhattan distances of out of position blocks
     private int manhattan() {
         int sum = 0;
 
@@ -46,6 +55,15 @@ public class Node {
             }
         }
         return sum;
+    }
+
+    // Checks if solved
+    public boolean isGoal() {
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                if (state[i][j] != GOAL[i][j])
+                    return false;
+        return true;
     }
 
     @Override
