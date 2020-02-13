@@ -3,7 +3,7 @@ CS-461 Projects
 
 ## Program 1 (8-Puzzle)
 An 8-puzzle is a 3x3 grid of tiles, numbered 1-8, with the last square in the grid being empty.  A tile can be slid into the blank spot, thus changing the configuration of the puzzle.
-![](https://github.com/evanwike/CS-461/img/puzzle.png)
+![](https://github.com/evanwike/CS-461/blob/master/img/puzzle.png)
 
 Given an arbitrary arrangement of tiles, can this goal state be reached? Not necessarily; half of all permutations are such that reaching the goal state is impossible.  (All states have either odd or even parity; no state with odd parity is reachable from any state with even parity, and vice-versa. The proof relies on a bit of number theory, not relevant here, and not essential for this program.)  Your task is to write a program that determines if the goal state can be reached, and if so, the series of moves (path) needed to reach it.
 
