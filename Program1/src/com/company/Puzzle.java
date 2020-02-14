@@ -1,8 +1,6 @@
 package com.company;
 
 import java.util.*;
-
-// Utility methods
 import static com.company.Main.pw;
 import static com.company.Utils.*;
 
@@ -45,8 +43,8 @@ public class Puzzle {
         pq.add(root);
 
         if (!isSolvable()) {
-            pw.write("No solution for initial state exists.\n");
             printPath(root);
+            pw.write("No solution exists.\n");
             return;
         }
 
@@ -71,28 +69,29 @@ public class Puzzle {
         LinkedList<Node> neighbors = new LinkedList<>();
         int row = node.getRow();
         int col = node.getCol();
+        int[][] newState;
 
         // Move up
         if (row > 0) {
-            int[][] newState = swap(node.getState(), row, col, row - 1, col);
+            newState = swap(node.getState(), row, col, row - 1, col);
             if (notVisited(newState))
                 neighbors.add(new Node(node, newState, node.getLevel() + 1, row - 1, col));
         }
         // Move down
         if (row < N - 1) {
-            int[][] newState = swap(node.getState(), row, col, row + 1, col);
+            newState = swap(node.getState(), row, col, row + 1, col);
             if (notVisited(newState))
                 neighbors.add(new Node(node, newState, node.getLevel() + 1, row + 1, col));
         }
         // Move left
         if (col > 0) {
-            int[][] newState = swap(node.getState(), row, col, row, col - 1);
+            newState = swap(node.getState(), row, col, row, col - 1);
             if (notVisited(newState))
                 neighbors.add(new Node(node, newState, node.getLevel() + 1, row, col - 1));
         }
         // Move right
         if (col < N - 1) {
-            int[][] newState = swap(node.getState(), row, col, row, col + 1);
+            newState = swap(node.getState(), row, col, row, col + 1);
             if (notVisited(newState))
                 neighbors.add(new Node(node, newState, node.getLevel() + 1, row, col + 1));
         }
@@ -153,7 +152,6 @@ public class Puzzle {
             path.push(parent);
             parent = parent.getParent();
         }
-
         return path;
     }
 
@@ -164,7 +162,7 @@ public class Puzzle {
             pw.write(path.pop().toString());
 
             if (path.size() > 0)
-                pw.write("  \u2193  \n");
+                pw.write("    \u2193\n");
         }
     }
 }

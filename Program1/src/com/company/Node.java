@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.Arrays;
 import static com.company.Utils.deepCopy;
 import static com.company.Puzzle.N;
 import static com.company.Puzzle.GOAL;
@@ -56,13 +57,8 @@ public class Node {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
-        for (int[] row : state) {
-            for (int col : row)
-                sb.append(String.format("%d ", col));
-            sb.append('\n');
-        }
-
+        for (int[] row : state)
+            sb.append(Arrays.toString(row)).append('\n');
         return sb.toString();
     }
 }
