@@ -1,10 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static com.company.Utils.deepCopy;
-import static com.company.Utils.flatten;
 import static com.company.Puzzle.N;
 import static com.company.Puzzle.GOAL;
 
@@ -27,11 +23,8 @@ public class Node {
     public Node getParent() { return parent; }
     public int[][] getState() { return deepCopy(state, N); }
     public int getLevel() { return level; }
-
-    // Get coordinates of blank space
     public int getRow() { return row; }
     public int getCol() { return col; }
-
     public int getMPF() { return mpf; }
 
     // Sum of Manhattan distances of out of position blocks

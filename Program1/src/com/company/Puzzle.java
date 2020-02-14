@@ -132,10 +132,9 @@ public class Puzzle {
     private boolean notVisited(int[][] state) {
         int hash = getHash(state);
 
-        if (visited.contains(hash))
-            return false;
-        else
-            visited.add(hash);
+        if (visited.contains(hash)) return false;
+        else visited.add(hash);
+
         return true;
     }
 
