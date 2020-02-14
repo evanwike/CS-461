@@ -5,50 +5,46 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+    public static PrintWriter pw;
+    private static Scanner scanner;
 
     public static void main(String[] args) {
-        Scanner scanner;
-        PrintWriter writer;
         ArrayList<Puzzle> puzzles = new ArrayList<>();
 
         try {
             scanner = new Scanner(new FileInputStream("data.txt"));
-            writer = new PrintWriter("solutions.txt");
+            pw = new PrintWriter("solutions.txt");
 
             while (scanner.hasNext()) {
-                Puzzle puzzle = new Puzzle(getBoardFromInput(scanner), writer);
+                Puzzle puzzle = new Puzzle(getBoardFromInput());
                 puzzles.add(puzzle);
             }
 
             scanner.close();
-            solvePuzzles(puzzles, writer);
+            solvePuzzles(puzzles);
         }
         catch (FileNotFoundException fnf) {
             System.out.println("An error occurred while attempting to open the input file.");
         }
 
     }
-
-    private static void solvePuzzles(ArrayList<Puzzle> puzzles, PrintWriter writer) {
+    
+    // Calls the solve method on each puzzle
+    private static void solvePuzzles(ArrayList<Puzzle> puzzles) {
         int i = 1;
 
         for (Puzzle puzzle : puzzles) {
-            writer.write(String.format("PUZZLE %d\n", i));
+            pw.write(String.format("PUZZLE %d\n", i));
 
-            if (puzzle.isSolvable()) {
-                puzzle.solve();
-            } else {
-                writer.write(puzzle.getInitial());
-                writer.write("No solution for initial state exists.\n");
-                writer.flush();
-            }
+            puzzle.solve();
             i++;
-            writer.write('\n');
+            pw.write('\n');
         }
-        writer.close();
+        pw.close();
     }
 
-    private static int[][] getBoardFromInput(Scanner scanner) {
+    // Processes each array from input file
+    private static int[][] getBoardFromInput() {
         int[][] board = new int[3][3];
 
         for (int i = 0; i < 3; i++) {
@@ -57,12 +53,5 @@ public class Main {
             }
         }
         return board;
-    }
-
-    // Used for testing board input
-    private static void printBoards(ArrayList<Puzzle> puzzles) {
-        for (Puzzle puzzle : puzzles) {
-            System.out.println(puzzle);
-        }
     }
 }

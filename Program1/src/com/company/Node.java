@@ -5,10 +5,10 @@ import java.util.Arrays;
 
 import static com.company.Utils.deepCopy;
 import static com.company.Utils.flatten;
+import static com.company.Puzzle.N;
+import static com.company.Puzzle.GOAL;
 
 public class Node {
-    private static final int N = 3;
-    private static final int[][] GOAL = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
     private Node parent;
     private int[][] state;
     private int level;          // # Moves so far
@@ -33,12 +33,6 @@ public class Node {
     public int getCol() { return col; }
 
     public int getMPF() { return mpf; }
-    public int getHash() {
-        ArrayList<Integer> flat = flatten(getState());
-        Integer[] a = flat.toArray(new Integer[0]);
-
-        return Arrays.hashCode(a);
-    }
 
     // Sum of Manhattan distances of out of position blocks
     private int manhattan() {
