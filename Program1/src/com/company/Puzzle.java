@@ -18,10 +18,10 @@ public class Puzzle {
     // Determines if puzzle is solvable by counting the number of inversions
     public boolean isSolvable() {
         int inversions = 0;
-        Integer[] arr = flatten(initial).toArray(new Integer[0]);
+        Integer[] arr = flatten(initial);
 
         for (int i = 0; i < arr.length - 1; i++) {
-            for (int j = i+1; j < arr.length; j++) {
+            for (int j = i + 1; j < arr.length; j++) {
                 int a = arr[i];
                 int b = arr[j];
 
@@ -36,7 +36,7 @@ public class Puzzle {
     }
     
     public void solve() {
-        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.getMPF() - b.getMPF());
+        PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(Node::getMPF));
         int[] bS = findBlankSpace();
         Node root = new Node(null, initial, 0, bS[0], bS[1]);
 
@@ -138,8 +138,7 @@ public class Puzzle {
     }
 
     private int getHash(int[][] state) {
-        Integer[] flattened = flatten(state).toArray(new Integer[0]);
-        return Arrays.hashCode(flattened);
+        return Arrays.hashCode(flatten(state));
     }
 
     // Moves from initial state -> goal state

@@ -35,7 +35,6 @@ public class Node {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 int tile = state[i][j];
-
                 int row = Math.abs(i - ((tile - 1) / 3));
                 int col = Math.abs(j - ((tile - 1) % 3));
 
