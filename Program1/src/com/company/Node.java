@@ -3,14 +3,14 @@ package com.company;
 import java.util.Arrays;
 import static com.company.Utils.deepCopy;
 import static com.company.Puzzle.N;
-import static com.company.Puzzle.GOAL;
 
 public class Node {
     private Node parent;
     private int[][] state;
     private int level;          // # Moves so far
     private int row, col;       // Blank tile position
-    private int mpf;            // Manhattan Priority Function
+    private int manDist;        // Sum of Manhattan distances
+    private int mpf;            // Manhattan Priority Function ( g(n) + h(n) )
 
     Node(Node parent, int[][] state, int level, int row, int col) {
         this.parent = parent;
@@ -18,7 +18,8 @@ public class Node {
         this.level = level;
         this.row = row;
         this.col = col;
-        this.mpf = manhattan() + level; // g(n) + h(n)
+        this.manDist = manhattan();
+        this.mpf = manDist + level;     // g(n) + h(n)
     }
 
     public Node getParent() { return parent; }
@@ -26,9 +27,12 @@ public class Node {
     public int getLevel() { return level; }
     public int getRow() { return row; }
     public int getCol() { return col; }
+    public int getManDist() { return manDist; }
     public int getMPF() { return mpf; }
 
     // Sum of Manhattan distances of out of position blocks
+    // Assumes goal state = ascending order, blank in bottom right position
+    // Can update to check for different goal states
     private int manhattan() {
         int sum = 0;
 
@@ -42,15 +46,6 @@ public class Node {
             }
         }
         return sum;
-    }
-
-    // Checks if solved
-    public boolean isGoal() {
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++)
-                if (state[i][j] != GOAL[i][j])
-                    return false;
-        return true;
     }
 
     @Override

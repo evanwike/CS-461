@@ -5,8 +5,7 @@ import static com.company.Main.pw;
 import static com.company.Utils.*;
 
 public class Puzzle {
-    public static final int N = 3;
-    public static final int[][] GOAL = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
+    public static final int N = 3;      // Dimension of board (N * N)
     private int[][] initial;
     private Set<Integer> visited;
 
@@ -37,8 +36,8 @@ public class Puzzle {
     
     public void solve() {
         PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(Node::getMPF));
-        int[] bS = findBlankSpace();
-        Node root = new Node(null, initial, 0, bS[0], bS[1]);
+        int[] bP = getBlankPosition();
+        Node root = new Node(null, initial, 0, bP[0], bP[1]);
 
         pq.add(root);
 
@@ -51,8 +50,8 @@ public class Puzzle {
         while (!pq.isEmpty()) {
             Node min = pq.poll();
 
-            // Goal state
-            if (min.isGoal()) {
+            // If sum of Manhattan distances == 0, no blocks are out of position - thus, in goal state
+            if (min.getManDist() == 0) {
                 printPath(min);
                 return;
             }
@@ -95,23 +94,22 @@ public class Puzzle {
             if (notVisited(newState))
                 neighbors.add(new Node(node, newState, node.getLevel() + 1, row, col + 1));
         }
-
         return neighbors;
     }
 
-    // Swap blank tile with tile at position (row1, col1)
-    private int[][] swap(int[][] state, int row, int col, int row1, int col1) {
+    // Swap blank tile with tile at position [newRow, newCol]
+    private int[][] swap(int[][] state, int row, int col, int newRow, int newCol) {
         int[][] copy = deepCopy(state, N);
         int temp = copy[row][col];
 
-        copy[row][col] = copy[row1][col1];
-        copy[row1][col1] = temp;
+        copy[row][col] = copy[newRow][newCol];
+        copy[newRow][newCol] = temp;
 
         return copy;
     }
 
     // Used to find position of initial blank space
-    private int[] findBlankSpace() {
+    private int[] getBlankPosition() {
         int[] coords = new int[2];
 
         for (int i = 0; i < N; i++) {
@@ -129,16 +127,13 @@ public class Puzzle {
 
     // Checks to see if neighbor state has already been visited
     private boolean notVisited(int[][] state) {
-        int hash = getHash(state);
+        // Used to track visited states
+        int hash = Arrays.hashCode(flatten(state));
 
         if (visited.contains(hash)) return false;
         else visited.add(hash);
 
         return true;
-    }
-
-    private int getHash(int[][] state) {
-        return Arrays.hashCode(flatten(state));
     }
 
     // Moves from initial state -> goal state
