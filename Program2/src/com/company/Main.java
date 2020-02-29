@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
-    private static final String path = "data/";
-    private static final String txtCourses = "courses.txt";
-    private static final String txtFaculty = "faculty.txt";
-    private static final String txtRooms = "rooms.txt";
+    private static final String PATH = "data/";
+    private static final String COURSE_DATA = "courses.txt";
+    private static final String FACULTY_DATA = "faculty.txt";
+    private static final String ROOM_DATA = "rooms.txt";
     private static HashMap<String, Course> courses;
     private static HashMap<String, Instructor> faculty;
     private static HashMap<String, Room> rooms;
@@ -29,7 +29,7 @@ public class Main {
     }
 
     private static void initCourses() throws IOException {
-        Scanner scanner = new Scanner(new FileInputStream(path + txtCourses));
+        Scanner scanner = new Scanner(new FileInputStream(PATH + COURSE_DATA));
 
         while (scanner.hasNextLine()) {
             String dept = scanner.next();
@@ -41,7 +41,7 @@ public class Main {
     }
 
     private static void initFaculty() throws IOException {
-        Scanner scanner = new Scanner(new FileInputStream(path + txtFaculty));
+        Scanner scanner = new Scanner(new FileInputStream(PATH + FACULTY_DATA));
 
         while (scanner.hasNextLine()) {
             String name = scanner.next();
@@ -62,7 +62,7 @@ public class Main {
     }
 
     private static void initRooms() throws IOException {
-        Scanner scanner = new Scanner(new FileInputStream(path + txtRooms));
+        Scanner scanner = new Scanner(new FileInputStream(PATH + ROOM_DATA));
 
         while (scanner.hasNextLine()) {
             String building = scanner.next();
