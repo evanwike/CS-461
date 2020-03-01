@@ -41,6 +41,8 @@ public class Rooms {
         return rooms;
     }
 
+    public int getNumRooms() { return rooms.size(); }
+
     @Override
     public String toString() {
         return "Rooms{" +
