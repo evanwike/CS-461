@@ -4,18 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Schedule {
-    List<Course> classes;
+    List<Class> classes;
     private double fitness;
     private int conflicts;
 
     public Schedule() {
         this.classes = new ArrayList<>();
         this.fitness = 0.0;
-    }
-
-
-
-    public void addCourse(int time) {
-
+        this.conflicts = 0;
     }
 }

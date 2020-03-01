@@ -1,6 +1,7 @@
-package com.company;
+package com.company.Instructors;
 
-import java.util.ArrayList;
+import com.company.Courses.Course;
+
 import java.util.List;
 
 public abstract class Instructor {
@@ -11,7 +12,6 @@ public abstract class Instructor {
     public Instructor(String name, String dept) {
         this.name = name;
         this.dept = dept;
-        coursesCanTeach = new ArrayList<>();
     }
 
     public String getName() {
@@ -22,9 +22,8 @@ public abstract class Instructor {
         return dept;
     }
 
-    // Overridden by Faculty, used by Staff
-    public void initCourses() {
-        coursesCanTeach.addAll(Main.COURSES);
+    public List<Course> getCoursesCanTeach() {
+        return coursesCanTeach;
     }
 
     @Override

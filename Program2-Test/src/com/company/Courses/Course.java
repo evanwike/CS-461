@@ -1,4 +1,4 @@
-package com.company;
+package com.company.Courses;
 
 public class Course {
     private String dept;
@@ -21,5 +21,14 @@ public class Course {
 
     public int getExpEnrollment() {
         return expEnrollment;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "dept='" + dept + '\'' +
+                ", courseNum='" + courseNum + '\'' +
+                ", expEnrollment=" + expEnrollment +
+                '}';
     }
 }
