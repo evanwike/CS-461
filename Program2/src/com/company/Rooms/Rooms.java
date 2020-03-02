@@ -38,7 +38,9 @@ public class Rooms {
     }
 
     public List<Room> getRooms() {
-        return rooms;
+        List<Room> copy = new ArrayList<>();
+        rooms.forEach(room -> copy.add(room.getCopy()));
+        return copy;
     }
 
     public int getNumRooms() { return rooms.size(); }

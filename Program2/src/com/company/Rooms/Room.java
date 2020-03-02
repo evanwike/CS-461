@@ -1,7 +1,5 @@
 package com.company.Rooms;
 
-import java.util.Arrays;
-
 public class Room {
     private String building;
     private String roomNum;
@@ -31,13 +29,16 @@ public class Room {
         return availableTimes;
     }
 
+    public Room getCopy() {
+        return new Room(this.building, this.roomNum, this.capacity, this.availableTimes.clone());
+    }
+
     @Override
     public String toString() {
         return "Room{" +
                 "building='" + building + '\'' +
                 ", roomNum='" + roomNum + '\'' +
                 ", capacity=" + capacity +
-                ", availableTimes=" + Arrays.toString(availableTimes) +
                 '}';
     }
 }

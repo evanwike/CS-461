@@ -43,6 +43,12 @@ public class Instructors {
         }
     }
 
+    public List<Instructor> getInstructors() {
+        List<Instructor> copy = new ArrayList<>();
+        instructors.forEach(instructor -> copy.add(instructor.getCopy()));
+        return copy;
+    }
+
     @Override
     public String toString() {
         return "Instructors{" +

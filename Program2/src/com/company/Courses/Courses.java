@@ -33,22 +33,31 @@ public class Courses {
         }
     }
 
-    public List<Course> getStaffCourseList() {
-        return new ArrayList<>(courses);
+    public List<String> getStaffCourseList() {
+        List<String> courseList = new ArrayList<>();
+        courses.forEach(course -> courseList.add(course.getCourseNum()));
+        return courseList;
     }
 
-    public List<Course> getFacultyCourseList(String[] courseNums) {
-        List<Course> list = new ArrayList<>();
+    public List<String> getFacultyCourseList(String[] courseNums) {
+        List<String> courseList = new ArrayList<>();
 
         for (String num : courseNums) {
             courses.forEach(course -> {
                 String courseNum = course.getCourseNum();
+
                 if (courseNum.contains(num))
-                    list.add(course);
+                    courseList.add(courseNum);
             });
         }
 
-        return list;
+        return courseList;
+    }
+
+    public List<Course> getCourses() {
+        List<Course> copy = new ArrayList<>();
+        courses.forEach(course -> copy.add(course.getCopy()));
+        return copy;
     }
 
     @Override

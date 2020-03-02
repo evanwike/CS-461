@@ -23,6 +23,8 @@ public class Course {
         return expEnrollment;
     }
 
+    public Course getCopy() { return new Course(this.dept, this.courseNum, this.expEnrollment); }
+
     @Override
     public String toString() {
         return "Course{" +

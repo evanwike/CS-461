@@ -7,4 +7,8 @@ public class Staff extends Instructor {
         super(name, dept);
         coursesCanTeach = Main.COURSES.getStaffCourseList();
     }
+
+    public Instructor getCopy() {
+        return new Staff(this.getName(), this.getDept());
+    }
 }
