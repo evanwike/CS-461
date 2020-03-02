@@ -7,7 +7,7 @@ import java.util.List;
 public abstract class Instructor {
     private String name;
     private String dept;
-    List<Course> coursesCanTeach;
+    List<String> coursesCanTeach;
 
     public Instructor(String name, String dept) {
         this.name = name;
@@ -22,7 +22,7 @@ public abstract class Instructor {
         return dept;
     }
 
-    public List<Course> getCoursesCanTeach() {
+    public List<String> getCoursesCanTeach() {
         return coursesCanTeach;
     }
 
@@ -33,5 +33,19 @@ public abstract class Instructor {
                 ", dept='" + dept + '\'' +
                 ", coursesCanTeach=" + coursesCanTeach +
                 '}';
+    }
+
+    public boolean canTeach(String courseNum) {
+        return coursesCanTeach.contains(courseNum);
+    }
+
+    public abstract Instructor getCopy();
+
+    public boolean isFaculty() {
+        return this instanceof Faculty;
+    }
+
+    public boolean isStaff() {
+        return this instanceof Staff;
     }
 }

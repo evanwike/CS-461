@@ -15,8 +15,7 @@ public class Main {
     public static final Rooms ROOMS = new Rooms();
 
     public static void main(String[] args) {
-        System.out.println(COURSES);
-        System.out.println(INSTRUCTORS);
-        System.out.println(ROOMS);
+        AnnealingSchedule as = new AnnealingSchedule();
+        as.run();
     }
 }
