@@ -1,21 +1,15 @@
 package com.company;
 
-import com.company.Courses.Courses;
-import com.company.Instructors.Instructors;
-import com.company.Rooms.Rooms;
-
 public class Main {
     public static final String PATH = "data/";
     public static final String COURSE_DATA = "courses.txt";
     public static final String INSTRUCTOR_DATA = "instructors.txt";
     public static final String ROOM_DATA = "rooms.txt";
-
-    public static final Courses COURSES = new Courses();
-    public static final Instructors INSTRUCTORS = new Instructors();
-    public static final Rooms ROOMS = new Rooms();
+    public static final int nBLOCKS = 7;
+    public static final int START_TIME = 10;
+    public static final Data DATA = new Data();
 
     public static void main(String[] args) {
-        AnnealingSchedule as = new AnnealingSchedule();
-        as.run();
+        SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing();
     }
 }

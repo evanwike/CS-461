@@ -1,56 +1,131 @@
 package com.company;
 
-import com.company.Classes.Class;
-import com.company.Classes.Classes;
-import com.company.Courses.Course;
-import com.company.Instructors.Instructor;
-import com.company.Rooms.Room;
-
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 public class Schedule {
-    private static final int BLOCKS = 7;
-    private List<Class>[] schedule;
-    private int fitness;
-    Classes classes;
+    private static final Data data = Main.DATA;
+    private List<Course> courses = data.getCourses();
+    private List<Instructor> instructors = data.getInstructors();
+    private List<Room> rooms = data.getRooms();
+    private List<List<Course>> schedule = new ArrayList<>();
+    private Random random = new Random();
+    private int fitness = 0;
 
+    // Initial random state
     public Schedule() {
-        this.schedule = new ArrayList[BLOCKS];
-        this.fitness = 0;
-        this.classes = new Classes();
-
-
         initSchedule();
         generateRandomSchedule();
         evaluateSchedule();
     }
 
+    // Successor state
+    public Schedule(Schedule parent) {
+        this.schedule = parent.getSchedule();
+        generateRandomSuccessor();
+        evaluateSchedule();
+    }
+
     private void initSchedule() {
-        for (int i = 0; i < BLOCKS; i++)
-            schedule[i] = new ArrayList<>();
+        for (int i = 0; i < Main.nBLOCKS; i++)
+            schedule.add(new ArrayList<>());
     }
 
     private void generateRandomSchedule() {
-        for (Class randomClass : classes.getRandomClassList()) {
-            int randInt = new Random().nextInt(BLOCKS);
-            schedule[randInt].add(randomClass);
-            randomClass.setTime(10 + randInt);
+        for (Course course : courses) {
+            int time = random.nextInt(schedule.size() - 1);
+            Instructor instructor = instructors.get(random.nextInt(instructors.size() - 1));
+            Room room = rooms.get(random.nextInt(rooms.size() - 1));
+
+            course.setInstructor(instructor);
+            course.setRoom(room);
+            course.setTime(Main.START_TIME + time);
+
+            schedule.get(time).add(course);
         }
+    }
+
+    private void generateRandomSuccessor() {
+        // Select random attribute to change
+        int attr = random.nextInt(3);
+        int time = random.nextInt(schedule.size() - 1);
+
+        // Ensure time block isn't empty
+        while (schedule.get(time).size() == 0)
+            time = random.nextInt(schedule.size() - 1);
+
+        // Get random course in randomly selected time block
+        List<Course> block = schedule.get(time);
+        Course course = block.size() > 1 ? block.get(random.nextInt(block.size() - 1)) : block.get(0);
+
+        // Change room
+        if (attr == 0) {
+            Room newRoom = getNewRandomRoom(course.getRoom());
+            course.setRoom(newRoom);
+        } // Change time
+        else if (attr == 1) {
+            int newTime = getNewRandomTime(time);
+            course.setTime(Main.START_TIME + newTime);
+
+            // Remove from old time block, add to new
+            block.remove(course);
+            schedule.get(newTime).add(course);
+        } // Change both
+        else {
+            Room newRoom = getNewRandomRoom(course.getRoom());
+            int newTime = getNewRandomTime(time);
+            course.setRoom(newRoom);
+            course.setTime(Main.START_TIME + newTime);
+
+            // Remove from old time block, add to new
+            block.remove(course);
+            schedule.get(newTime).add(course);
+        }
+    }
+
+    // Ensure room changes
+    private Room getNewRandomRoom(Room room) {
+        Room newRoom = rooms.get(random.nextInt(rooms.size() - 1));
+
+        while (newRoom.equals(room))
+            newRoom = rooms.get(random.nextInt(rooms.size() - 1));
+
+        return newRoom;
+    }
+
+    // Ensure time changes
+    private int getNewRandomTime(int time) {
+        int newTime = random.nextInt(schedule.size() - 1);
+
+        while (newTime == time)
+            newTime = random.nextInt(schedule.size() - 1);
+
+        return newTime;
+    }
+
+    public List<List<Course>> getSchedule() {
+        List<List<Course>> outer = new ArrayList<>();
+
+        for (List<Course> time : schedule) {
+            List<Course> inner = time.stream()
+                    .map(Course::copy)
+                    .collect(Collectors.toList());
+            outer.add(inner);
+        }
+        return outer;
     }
 
     private void evaluateSchedule() {
 
         // Time block conflicts
-        for (List<Class> time : schedule) {
-            for (Class c : time) {
-                Course course = c.getCourse();
-                Instructor instructor = c.getInstructor();
-                Room room = c.getRoom();
+        for (List<Course> time : schedule) {
+            for (Course course : time) {
+                Instructor instructor = course.getInstructor();
+                Room room = course.getRoom();
 
-                if (instructor.isFaculty()) {
+                if (!instructor.getName().equals("Staff")) {
                     // Course taught by instructor who can teach it other than Staff
-                    if (instructor.canTeach(course.getCourseNum()))
+                    if (instructor.getCourses().contains(course))
                         fitness += 3;
                 } else {
                     // Taught by staff
@@ -58,16 +133,16 @@ public class Schedule {
                 }
 
                 // Only course scheduled in that room at that time
-                if (noRoomConflict(time, room))
+                if (!roomConflict(time, room))
                     fitness += 5;
-                
-                int enrollment = course.getExpEnrollment();
+
+                int enrollment = course.getEnrollment();
                 int capacity = room.getCapacity();
 
                 // In room large enough to accommodate it
                 if (enrollment < capacity)
                     fitness += 5;
-                
+
                 // Room capacity no more than twice the expected enrollment
                 if (capacity <= (enrollment * 2))
                     fitness += 2;
@@ -115,31 +190,28 @@ public class Schedule {
 
     }
 
-    private static boolean noRoomConflict(List<Class> time, Room room) {
+    private static boolean roomConflict(List<Course> time, Room room) {
+        for (Course c : time)
+            if (c.getRoom().equals(room))
+                return true;
+        return false;
+    }
+
+    private static boolean noInstructorConflict(List<Course> time, Instructor instructor) {
         int num = 0;
 
-        for (Class c : time)
-            if (c.getRoom().equals(room))
+        for (Course c : time)
+            if (c.getInstructor().equals(instructor))
                 num++;
 
         return num == 1;
-    }
-    
-    private static boolean noInstructorConflict(List<Class> time, Instructor instructor) {
-        int num = 0;
-        
-        for (Class c : time)
-            if (c.getInstructor().equals(instructor))
-                num++;
-            
-        return num == 1;    
     }
 
     private Map<String, Integer> instructorCounts() {
         Map<String, Integer> counts = new HashMap<>();
 
-        for (List<Class> time : schedule) {
-            for (Class c : time) {
+        for (List<Course> time : schedule) {
+            for (Course c : time) {
                 Instructor instructor = c.getInstructor();
                 counts.putIfAbsent(instructor.getName(), 1);
                 counts.compute(instructor.getName(), (k, v) -> v + 1);
@@ -149,13 +221,13 @@ public class Schedule {
         return counts;
     }
 
-    private boolean takenTogetherConflict(String courseNum1, String courseNum2, List<Class> time) {
-        List<Class> classes1 = classes.getClassesByCourseNumber(courseNum1);
-        List<Class> classes2 = classes.getClassesByCourseNumber(courseNum2);
+    private boolean takenTogetherConflict(String courseNum1, String courseNum2, List<Course> time) {
+        List<Course> first = filterByCourseNumber(courseNum1);
+        List<Course> second = filterByCourseNumber(courseNum2);
 
         // If any section of either course in same time block
-        for (Class c1 : classes1)
-            for (Class c2 : classes2)
+        for (Course c1 : first)
+            for (Course c2 : second)
                 if (time.contains(c1) && time.contains(c2))
                     return true;
 
@@ -164,27 +236,27 @@ public class Schedule {
 
     private int courseAdjacencyFitness(String courseNum1, String courseNum2) {
         int fitness = 0;
-        List<Class> classes1 = classes.getClassesByCourseNumber(courseNum1);
-        List<Class> classes2 = classes.getClassesByCourseNumber(courseNum2);
+        List<Course> classes1 = filterByCourseNumber(courseNum1);
+        List<Course> classes2 = filterByCourseNumber(courseNum2);
 
-        for (int i = 0; i < schedule.length; i++) {
-            List<Class> current = schedule[i];
-            List<Class> adjacent;
+        for (int i = 0; i < schedule.size(); i++) {
+            List<Course> current = schedule.get(i);
+            List<Course> adjacent;
 
             if (i == 0) {
                 // Time block after first
-                adjacent = new ArrayList<>(schedule[1]);
-            } else if (i == schedule.length - 1) {
+                adjacent = new ArrayList<>(schedule.get(1));
+            } else if (i == schedule.size() - 1) {
                 // Time block before last
-                adjacent = new ArrayList<>(schedule[i-2]);
+                adjacent = new ArrayList<>(schedule.get(i - 2));
             } else {
                 // Time blocks before and after current
-                adjacent = new ArrayList<>(schedule[i-1]);
-                adjacent.addAll(schedule[i + 1]);
+                adjacent = new ArrayList<>(schedule.get(i - 1));
+                adjacent.addAll(schedule.get(i + 1));
             }
 
-            for (Class c1 : classes1) {
-                for (Class c2 : classes2) {
+            for (Course c1 : classes1) {
+                for (Course c2 : classes2) {
                     // Courses scheduled for adjacent times
                     if (current.contains(c1) && adjacent.contains(c2)) {
                         fitness += 5;
@@ -215,12 +287,16 @@ public class Schedule {
     }
 
     private boolean threeHoursApart(String courseNum1, String courseNum2) {
-        Class c1 = classes.getClassByCourseNumber(courseNum1);
-        Class c2 = classes.getClassByCourseNumber(courseNum2);
+        Course c1 = courses.stream()
+                .filter(c -> c.getName().contains(courseNum1))
+                .collect(Collectors.toList()).get(0);
+        Course c2 = courses.stream()
+                .filter(c -> c.getName().contains(courseNum2))
+                .collect(Collectors.toList()).get(0);
         int index1 = -1;
         int index2 = -1;
 
-        for (List<Class> time : schedule) {
+        for (List<Course> time : schedule) {
             if (time.contains(c1))
                 index1 = time.indexOf(c1);
             if (time.contains(c2))
@@ -233,14 +309,21 @@ public class Schedule {
     public int getFitness() {
         return fitness;
     }
+    
+    private List<Course> filterByCourseNumber(String courseNum) {
+        return courses.stream()
+                .filter(c -> c.getName().contains(courseNum))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Fitness: ").append(fitness).append('\n');
-        for (List<Class> block : schedule)
-            for (Class c : block)
-                sb.append(c).append('\n');
+
+        for (List<Course> time : schedule)
+            for (Course c : time)
+                sb.append(c.out()).append('\n');
 
         return sb.toString();
     }

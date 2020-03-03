@@ -1,0 +1,31 @@
+ITERATIONS: 72000
+
+FINAL Schedule:
+Fitness: 110
+11:00AM - Royall 204 (CS 191A Mitchell)
+12:00PM - Flarsheim 260 (CS 201A Kuhail)
+12:00PM - Haag 206 (CS 291B Rao)
+12:00PM - Flarsheim 310 (CS 303 Kuhail)
+1:00PM - Flarsheim 260 (CS 101A Hare)
+1:00PM - Royall 204 (CS 201B Bingham)
+1:00PM - Flarsheim 310 (CS 461 Mitchell)
+1:00PM - Flarsheim 260 (CS 101B Kuhail)
+1:00PM - Haag 206 (CS 291A Bingham)
+1:00PM - Royall 204 (CS 449 Mitchell)
+3:00PM - Haag 301 (CS 191B Rao)
+3:00PM - Flarsheim 310 (CS 341 Hare)
+
+BEST Schedule:
+Fitness: 132
+11:00AM - Katz 209 (CS 101A Hare)
+1:00PM - Haag 301 (CS 449 Mitchell)
+2:00PM - Katz 209 (CS 101B Kuhail)
+2:00PM - Haag 301 (CS 291A Bingham)
+2:00PM - Katz 209 (CS 341 Hare)
+3:00PM - Haag 206 (CS 191B Rao)
+3:00PM - Katz 209 (CS 201B Bingham)
+3:00PM - Haag 301 (CS 303 Kuhail)
+3:00PM - Royall 204 (CS 191A Mitchell)
+3:00PM - Katz 209 (CS 201A Kuhail)
+3:00PM - Haag 301 (CS 461 Mitchell)
+3:00PM - Haag 301 (CS 291B Rao)
