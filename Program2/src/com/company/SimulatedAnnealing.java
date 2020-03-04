@@ -3,7 +3,6 @@ package com.company;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-// FIXME: Why always 72000 iterations?
 public class SimulatedAnnealing {
     private double T = 10000;
     private static final double coolingRate = .95;
@@ -20,7 +19,8 @@ public class SimulatedAnnealing {
     public void run() {
         Schedule current = new Schedule();
 
-        while (T > 1) {
+        // FIXME: Should be while true, but results in infinite loop
+        while (T > .00000001) {
             Schedule successor = new Schedule(current);
 
             int f1 = current.getFitness();
@@ -32,17 +32,18 @@ public class SimulatedAnnealing {
                 maxFitness = f2;
             }
 
-            // If successor > current OR probability < 1
+            // If successor > current or accepted by probability
             if (accept(f1, f2)) {
                 current = successor;
                 successfulChanges++;
             }
 
             // Lower temperature after 400 successful changes OR 4000 attempts
-            if (successfulChanges == 400 || attempts == 4000) {
+            if (successfulChanges >= 400 || attempts >= 4000) {
                 // Stop after 4000 attempts without a successful change
-                if (attempts >= 4000 && successfulChanges == 0)
-                    return;
+                if (attempts >= 4000 && successfulChanges == 0) {
+                    break;
+                }
 
                 T *= coolingRate;
                 successfulChanges = 0;
@@ -55,7 +56,6 @@ public class SimulatedAnnealing {
             total++;
         }
 
-        System.out.println(String.format("BEST after %d iterations: %d", total, maxFitness));
         System.out.println(bestSchedule);
         out(current);
     }

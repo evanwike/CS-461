@@ -29,6 +29,14 @@ public class Instructor {
         return new Instructor(name, dept, courses);
     }
 
+    public boolean isFaculty() {
+        return !name.equals("Staff");
+    }
+
+    public boolean canTeach(Course course) {
+        return courses.stream().anyMatch(c -> c.getName().equals(course.getName()));
+    }
+
     public String out() {
         return name;
     }

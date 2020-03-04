@@ -44,8 +44,8 @@ public class Course {
         this.time = time;
     }
 
-    public boolean hasInvalidInstructor() {
-        return instructor.getCourses().contains(this);
+    public boolean hasValidInstructor() {
+        return instructor.canTeach(this);
     }
 
     private String getFormattedTime() {

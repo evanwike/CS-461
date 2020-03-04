@@ -123,9 +123,9 @@ public class Schedule {
                 Instructor instructor = course.getInstructor();
                 Room room = course.getRoom();
 
-                if (!instructor.getName().equals("Staff")) {
+                if (instructor.isFaculty()) {
                     // Course taught by instructor who can teach it other than Staff
-                    if (instructor.getCourses().contains(course))
+                    if (course.hasValidInstructor())
                         fitness += 3;
                 } else {
                     // Taught by staff

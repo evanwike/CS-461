@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Data {
     private List<Course> courses;
@@ -51,18 +52,18 @@ public class Data {
                 // Staff can teach all courses
                 coursesCanTeach = new ArrayList<>(courses);
             } else {
-                // Get course numbers Instructor can teach from input
-                List<String> nums = Arrays.asList(scanner
+                coursesCanTeach = new ArrayList<>();
+                // Get course numbers from input as list of strings
+                // Get all courses containing that course number and add them to coursesCanTeach list
+                Arrays.asList(scanner
                         .skip(" ")
                         .nextLine()
-                        .split(" "));
-                // Get course objects corresponding to course numbers
-                coursesCanTeach = new ArrayList<>();
-
-                for (String num : nums)
-                    for (Course course : courses)
-                        if (course.getName().contains(num))
-                            coursesCanTeach.add(course);
+                        .split(" "))
+                        .forEach(n ->
+                            coursesCanTeach.addAll(
+                                    courses.stream()
+                                            .filter(course -> course.getName().contains(n))
+                                            .collect(Collectors.toList())));
             }
 
             instructors.add(new Instructor(name, dept, coursesCanTeach));
