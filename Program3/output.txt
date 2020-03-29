@@ -1,0 +1,6 @@
+Hall = [
+room(acct, nissan, broncos, rock, coke),
+room(engr, chevy, chiefs, country, coffee),
+room(cs, tesla, royals, techno, tea),
+room(hist, ford, cubs, jazz, _6898),  (empty because water not used)
+room(eng, toyota, yankees, classical, milk)]
