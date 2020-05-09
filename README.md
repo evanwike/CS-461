@@ -72,3 +72,69 @@ You may want to try running your program several times and see how much variatio
 
 You may write your program in C, C++, C#, Java, or Python. (If you’ve got something else you want to use, talk to me, we’ll discuss it.) Submit your program source code, and a sample program run with the schedule it produces. Also write up a short report discussing your program, what data structures you used, or ideas for how this program could be extended or generalized.
 ***
+### Program 3 (PROLOG)
+For this program, you are to write a program in PROLOG to solve the following logic problem. Note that 'adjacent to' or 'neighbor' may be on the left or the right unless other constraints dictate otherwise. And of course, the neighbor relation is symmetric. If A is a neighbor of B, then B is a neighbor of A.
+
+A college dorm hallway has 5 1-person rooms. Each resident is a different major, listens to a different style of music, drives a different make of car, has a different favorite sports team, and a different favorite beverage.
+
+* The computer science student lives in the middle of the corridor
+* The history major is a jazz fan.
+* The Yankees fan drives a Toyota.
+* The accounting major drinks Coke.
+* The engineering major drinks coffee.
+* The computer science student and history student are neighbors.
+* The student at the far end of the hall likes classical music
+* The tea drinker drives a Tesla.
+* The classical music fan lives next to the jazz listener.
+* The English major does not live in either of the first two rooms.
+* The Royals fan drives a Tesla.
+* The Cubs fan listens to jazz.
+* The engineering major follows the Chiefs
+* The first room is the home of the Broncos fan
+* The Coke drinker drives a Nissan.
+* The country music fan and the techno fan are neighbors.
+* The accounting major lives in the first room.
+* The fans of the 2 Kansas City teams (Chiefs and Royals) are neighbors
+* The accounting major listens to rock music
+* The Yankees fan drinks milk.
+* The Chevy driver listens to country music.
+* The jazz fan drives a Ford.
+
+*What music does the computer-science student listen to and what does the English major drink?*
+
+**Summary:**
+* **Majors:** Accounting, Computer Science, Engineering, History, English
+* **Cars:** Ford, Chevy, Nissan, Toyota, Tesla
+* **Sports Teams:** Royals, Chiefs, Yankees, Broncos, Cubs
+* **Music:** Classical, Country, Jazz, Rock, Techno
+* **Drinks:** Coke, Coffee, Tea, Milk, Water
+
+Write a PROLOG program that contains the above facts as a knowledge base, and functions to capture 'adjacent to,' 'all different,' etc. Your program should begin with the above facts and deduce the major, car, music, sports team, and beverage for each resident, printing the information at the end. Submit your program code and output from a sample execution.
+***
+### Program 4 (TensorFlow)
+For this assignment, you'll be using some real-world data to predict product quality. The data will need some initial preparation before processing.
+
+Your data file is based on reviews from The Ramen Rater, a site for serious ramen fans. The data consists of 2580 product reviews. For each, you have:
+* Identifier (unique integer)
+* Brand (355 values)
+* Variety (2413 unique values)
+* Style (8 values)
+* Country of origin (38 values)
+* Stars (numeric rating)
+* Top Ten (text, missing on most entries, ignore)
+
+You will need to do some initial data configuration and recoding. This can (and should) be done separately, before using TensorFlow to build your network. Specifically:
+* Some companies have multiple products, others only appear once. Count the number of times each company name appears. Any company appearing only once should be replaced with "Other".  (With only 1 product, there's no way to generalize about the company.)
+* The "variety" field has the richest information, but also needs some distillation before we can use it conveniently as input into a neural network. We'd like to identify specific features--flavors, descriptions, etc--that might tell us something. So we have to get it into that form. Again, this should be done separately:
+  * Take the text from the Variety column, and break it into words.
+  * Count the occurrences of each word and find the 100 most common words. Keep ONLY those words for classification. (Note that some reviews might have several of those popular words, others might not have any.)
+  * Code for the presence or absence of each of the most common 100 words. (Note that this is not one-hot coding; if 5 of the words are present, then all 5 should be accounted for in input, not just one.)
+
+Once the data is ready for input, build a neural network in TF to predict the overall rating. Your rating should be by categories, 0-5 stars. Use 1-hot coding for the output (maximum value is taken as the classification).
+
+Write up a short report discussing:
+* The configuration of your network, along with a brief overview of your TF code. It is not necessary to discuss the (python, perl, whatever) code you used to clean up the data.
+* Your cross-validation strategy
+* Summarize your results
+* Any further questions you'd like to discuss, ideas for extending this further, etc.
+***
